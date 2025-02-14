@@ -1,0 +1,45 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevents any unwanted horizontal scrolling */
+}
+
+
+.swiper {
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+}
+
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures full-screen image without distortion */
+  overflow: hidden;
+}
+
+.swiper-button-next{
+  color: #fff;
+ 
+}
+.swiper-button-prev {
+  color: #fff;
+
+}
+@media screen and (max-width: 768px) {
+  .swiper {
+height: 100%;
+  }
+  .swiper-slide{
+    height:100%;
+  }
+}
