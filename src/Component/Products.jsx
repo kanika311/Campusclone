@@ -148,6 +148,13 @@ const Products = () => {
     const params = useParams();
     console.log(params, 'params');
     let data= {};
+    if (params.type === 'sale') {
+      data = {
+        saleCategory:"sale",
+        NumberOfProduct:"2409",
+        image:"https://img.freepik.com/free-vector/colorful-sale-banner-template_1361-1223.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid"
+      }
+    }
     if (params.type === 'newarrival') {
       data = {
         saleCategory :"New arrival",

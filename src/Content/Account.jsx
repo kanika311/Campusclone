@@ -10,7 +10,7 @@ const Account = () => {
   
         <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <div className="bg-white p-6 w-full max-w-md">
-        <h2 className="text-[32px] font-[400] text-center mb-4"> Login / Sign Up </h2>
+        <h2 className="text-[32px] font-[400] text-center mb-4"> Login  </h2>
 
         {/* Phone Input */}
         <div className="flex md:flex-row flex-col gap-4 ">
@@ -47,8 +47,8 @@ const Account = () => {
             <FaGoogle size={25}/>Sign in with Google
           </button>
 <div className='flex items-center justify-center gap-10'>
-          <Link to="/signin" className="hover:text-red-900 text-black text-sm">Signin</Link>
-          <Link to="/Forget password" className="hover:text-red-900 text-black text-sm">Forget password</Link>
+          <Link to="/signin" className="hover:text-red-900 text-black text-sm underline">SignUp</Link>
+          <Link to="/Forget password" className="hover:text-red-900 text-black text-sm underline">Forget password</Link>
           </div>
         </div>
       </div>

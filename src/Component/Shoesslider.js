@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./Shoeslider.css"; // Import the CSS file
 import { CiHeart } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 const Shoesslider = () => {
   const prevRef = useRef(null);
@@ -83,6 +84,10 @@ const Shoesslider = () => {
         discount: "15% off",
       },
   ];
+  const navigate =useNavigate();
+  const   handleproduct=()=>{
+    navigate('/productdetail/5465');
+  }
   useEffect(() => {
     if (swiperRef.current) {
       swiperRef.current.params.navigation.prevEl = prevRef.current;
@@ -114,7 +119,7 @@ const Shoesslider = () => {
 >
   {products.map((product) => (
     <SwiperSlide key={product.id} className="slide-item">
-      <div className="product-card group flex flex-col  item-center justify-center md:items-start md:justify-start gap-4 relative overflow-hidden">
+      <div onClick={handleproduct} className="product-card group flex flex-col  item-center justify-center md:items-start md:justify-start gap-4 relative overflow-hidden">
         <CiHeart />
         <img src={product.image} alt={product.description} className="product-image" />
         

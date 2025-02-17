@@ -1,0 +1,22 @@
+.slider-container {
+    width: 100%;
+    text-align: center;
+    position: relative;
+height: 80%;
+padding: 0px;
+object-fit: cover;
+
+  }
+  .slide-item {
+    display: flex;
+    justify-content: start;
+    margin-right: 0px;
+    width: 100%;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
