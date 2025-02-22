@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 import campuslogo from '../assets/campuslogo.avif'
-import { CiHeart } from "react-icons/ci";
+import { CiHeart, CiSearch } from "react-icons/ci";
 import { CiShoppingCart } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
-import { RxCross1 } from "react-icons/rx";
+import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
 import Navbarresp from "./Navbaresponsive";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -28,16 +28,16 @@ const Header = () => {
       <div className="flex items-center justify-between p-4 md:p-6">
        
         {/* 🟢 Mobile Hamburger Menu */}
-        <div className="md:hidden flex items-center gap-2">
+        <div className="md:hidden flex items-center gap-2 ">
           
-          <GiHamburgerMenu
+        <RxHamburgerMenu
             onClick={() => setNavbarOpen(true)} // Open drawer on click
-            color="gray"
-            size={30}
-            className="cursor-pointer"
+            color="black"
+            size={25}
+            className="cursor-pointer "
           />
-          <div onClick={handleNavigation} className="flex justify-center items-center gap-2">
-            <GrSearch />
+          <div onClick={handleNavigation} className="flex justify-center items-center gap-2  cursor-pointer">
+          <CiSearch size={25} className=" cursor-pointer"/>
 
           </div>
           {/* 🟢 Mobile Drawer */}
@@ -65,7 +65,7 @@ const Header = () => {
         </div>
 
         {/* 🟢 Logo */}
-        <div onClick={handleNavigation} className="hidden md:flex justify-center items-center gap-2 hover:text-red-900">
+        <div onClick={handleNavigation} className="hidden md:flex justify-center items-center gap-2 hover:text-red-900  cursor-pointer">
           <GrSearch />
           Serach
         </div>
@@ -76,9 +76,7 @@ const Header = () => {
         {/* 🟢 Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           <Link to="/account" className="hover:text-red-900 text-black text-sm">Account</Link>
-          <Link to="/wishlist" className="hover:text-red-900 text-black text-sm flex items-center gap-1">
-            Wishlist <CiHeart size={24} />
-          </Link>
+          
           <Link to="/cart" className="hover:text-red-900 text-black text-sm flex items-center gap-1">
             Cart <CiShoppingCart size={24} />
           </Link>
@@ -87,9 +85,9 @@ const Header = () => {
 
         {/* 🟢 Mobile Icons */}
         <div className="md:hidden flex gap-3">
-          <CiHeart size={30} />
-          <CiShoppingCart size={30} />
-          <CiLocationOn size={30} />
+        
+          <CiShoppingCart size={25} onClick={()=>{navigate('/cart')}}/>
+        
         </div>
       </div>
 

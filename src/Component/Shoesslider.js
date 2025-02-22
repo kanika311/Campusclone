@@ -5,88 +5,48 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./Shoeslider.css"; // Import the CSS file
 import { CiHeart } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { CloudCog } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductList } from "../reduxs/slices/product";
 
 const Shoesslider = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const swiperRef = useRef(null);
+const params =useParams()
+// productvalue
+const dispatch =useDispatch();
+    const {product} = useSelector(state => state.product);
+    
 
-  const products = [
-    {
-      id: 1,
-      description: "Raasile White Women Sneakers",
-      amount: "Rs. 1,229.00",
-      image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-      discount: "51% off",
-    },
-    {
-      id: 2,
-      description: "Raasile Blue Women Sneakers",
-      amount: "Rs. 1,299.00",
-      image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-      discount: "30% off",
-    },
-    {
-      id: 3,
-      description: "Raasile Black Sneakers",
-      amount: "Rs. 1,599.00",
-      image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-      discount: "20% off",
-    },
-    {
-      id: 4,
-      description: "Raasile Green Sneakers",
-      amount: "Rs. 1,799.00",
-      image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-      discount: "15% off",
-    },
-    {
-        id: 5,
-        description: "Raasile Blue Women Sneakers",
-        amount: "Rs. 1,299.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "30% off",
-      },
-      {
-        id: 6,
-        description: "Raasile Black Sneakers",
-        amount: "Rs. 1,599.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "20% off",
-      },
-      {
-        id: 7,
-        description: "Raasile Green Sneakers",
-        amount: "Rs. 1,799.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "15% off",
-      },
-      {
-        id: 8,
-        description: "Raasile Blue Women Sneakers",
-        amount: "Rs. 1,299.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "30% off",
-      },
-      {
-        id: 9,
-        description: "Raasile Black Sneakers",
-        amount: "Rs. 1,599.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "20% off",
-      },
-      {
-        id: 10,
-        description: "Raasile Green Sneakers",
-        amount: "Rs. 1,799.00",
-        image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-        discount: "15% off",
-      },
-  ];
+    let filterproduct = { 
+   
+        category: { $regex: "Trending", $options: "i" } 
+        
+      
+    };
+    
+    console.log("After setting:", filterproduct); 
+  
+    const handleGetProduct = async () => {
+      try {
+       
+      
+        const result = await dispatch(fetchProductList(1,10,filterproduct)); 
+   
+      
+        return !!result;
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        return false;
+      }
+    };
+           console.log(product,'productlist')
+           
   const navigate =useNavigate();
-  const   handleproduct=()=>{
-    navigate('/productdetail/5465');
+  const   handleproduct=(productid)=>{
+    navigate(`/productdetail/${productid}`);
   }
   useEffect(() => {
     if (swiperRef.current) {
@@ -96,6 +56,11 @@ const Shoesslider = () => {
       swiperRef.current.navigation.update();
     }
   }, []);
+
+
+  useEffect(()=>{
+   handleGetProduct();
+  },[])
 
   return (
     <div className="slider-container h-auto sm:m-0 sm:p-0  z-0">
@@ -110,27 +75,27 @@ const Shoesslider = () => {
       <Swiper
   modules={[Navigation]}
   spaceBetween={20}
-  slidesPerView={6} // Default for large screens
+  slidesPerView={4} // Default for large screens
   breakpoints={{
-    0: { slidesPerView: 2 }, // Mobile screens
-    768: { slidesPerView: 6 }, // Tablets and larger screens
+    0: { slidesPerView: 1}, // Mobile screens
+    768: { slidesPerView: 4}, // Tablets and larger screens
   }}
   onSwiper={(swiper) => (swiperRef.current = swiper)}
 >
-  {products.map((product) => (
-    <SwiperSlide key={product.id} className="slide-item">
-      <div onClick={handleproduct} className="product-card group flex flex-col  item-center justify-center md:items-start md:justify-start gap-4 relative overflow-hidden">
-        <CiHeart />
-        <img src={product.image} alt={product.description} className="product-image" />
+  {product.map((product) => (
+    <SwiperSlide onClick={()=>handleproduct(product?.id)}  key={product?.id} className="slide-item">
+      <div  className="product-card group flex flex-col  item-center justify-center md:items-start md:justify-start gap-4 relative overflow-hidden">
+        <CiHeart size={25}/>
+        <img src={product.image} alt={product?.title?.shortTitle} className="product-image" />
         
         {/* Button with smooth transition */}
-        <button className="bg-white border-[#212B36] border-[1.5px] text-[#212B36] w-full h-[35px] rounded-[2px] 
+        <button className="hidden md:block bg-white border-[#212B36] border-[1.5px] text-[#212B36] w-[100%] h-[80px] rounded-[2px] 
           opacity-0 translate-y-4 tansition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
           Quick Buy
         </button>
 
-        <p className="text-[#171717] text-[14px]">{product.description}</p>
-        <span className="text-[#171717] text-[14px] ">{product.amount}</span>
+        <p className="text-[#171717] text-[14px]">{product?.title?.shortTitle}</p>
+        <span className="text-[#171717] text-[14px] ">{product.price.mrp}</span>
       </div>
     </SwiperSlide>
   ))}

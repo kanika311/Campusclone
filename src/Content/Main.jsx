@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SwiperSlider from '../Component/Slidermain'
 import Shoesslider from '../Component/Shoesslider'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProductList } from '../reduxs/slices/product';
 
 
 
 const Main = () => {
+  
+          
   return (
     <div className=' h-auto w-[100%]'>
       <SwiperSlider />
-      <Shoesslider />
-      <div className="md:mt-[60px] md:space-y-0 md:mx-0  mx-[20px] space-y-10">
+      <Shoesslider  />
+      <div className="mt-[60px]  md:space-y-0 md:mx-0 ">
   {/* Image Grid 1 */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:mb-[10px] md:mx-[20px]">
     <img className="w-full h-auto object-cover" src="https://img.freepik.com/free-photo/middle-aged-man-presenting-shoe-shirt-looking-serious-front-view_176474-55062.jpg" alt=""/>
@@ -26,21 +30,21 @@ const Main = () => {
   <div className="text-xl font-semibold text-center text-[#171717]">Explore More!</div>
 
   {/* Image Grid 3 with Text */}
-  <div className="grid grid-cols-1 h-auto md:grid-cols-2 gap-4 md:mx-[20px]">
+  <div className="grid grid-cols-1 h-auto md:grid-cols-2 gap-8 md:mx-[20px]">
     <div>
       <img className="w-full h-[80%] object-cover" src="https://img.freepik.com/free-photo/kid-having-fun-outdoors_23-2148817360.jpg" alt=""/>
       <p className="mt-3 text-[#787A7C] text-sm md:text-base">AUTUMN WINTER COLLECTION</p>
       <p className="mt-1 text-[#787A7C] text-lg md:text-xl font-semibold">Step In, Stand Out: Shop Vikrant’s faves!</p>
     </div>
     <div>
-      <img className="w-full h-[80%] object-cover" src="https://img.freepik.com/free-photo/girl-blouse_1303-4515.jpg" alt=""/>
+      <img className="w-full h-[80%] object-cover " src="https://img.freepik.com/free-photo/beautiful-female-shopaholic-kissing-high-heels_329181-3849.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid" alt=""/>
       <p className="mt-3 text-[#787A7C] text-sm md:text-base">SNEAKERS FOR HER</p>
       <p className="mt-1 text-[#787A7C] text-lg md:text-xl font-semibold">Sneaker Slay: Level up your fashion game! #YouGoGirl</p>
     </div>
   </div>
 
   {/* Just Kickin' Section */}
-  <div className="bg-[#f7f1f0] text-black p-6 md:p-12 flex flex-col md:flex-row items-center justify-between">
+  <div className="bg-[#f7f1f0] text-black p-6 md:p-12 flex flex-col md:flex-row items-center justify-between mt-[50px]">
     {/* Images */}
     <div className="relative w-full md:w-[500px] h-[300px] flex justify-center items-center">
       <img className="md:h-[250px] md:w-[280px] h-[150px] w-[150px] absolute md:top-[50px] top-[30px] md:left-[0px] left-[10px] z-10 shadow-lg" src="https://img.freepik.com/premium-photo/stylish-man-beige-shoes-outdoors_392895-3407.jpg" alt=""/>

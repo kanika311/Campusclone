@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 export const Sale = () => {
   const naviagte= useNavigate();
   const handleManPage=()=>{
-    naviagte('/product/man')
+    naviagte('/product/men')
   }
   const handleWomanPage=()=>{
-    naviagte('/product/woman')
+    naviagte('/product/women')
   }
   const handleKidsPage=()=>{
     naviagte('/product/kids')

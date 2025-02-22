@@ -1,56 +1,102 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiHeart } from 'react-icons/ci';
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaFacebookF } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPinterest } from "react-icons/fa6";
-
-
 import { RiSecurePaymentFill } from "react-icons/ri";
 import { MdAssignmentReturn } from "react-icons/md";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { Drawer } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Swipershoe from './Swiper';
-const Productdescription = () => {
-  const products = [
-    {
-      id: 1,
-      description: "Raasile White Women Sneakers",
-      amount: "Rs. 1,229.00",
-      image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_2.jpg?v=1738849570",
-      discount: "51% off",
-    },
-    {
-      id: 2,
-      description: "Raasile Blue Women Sneakers",
-      amount: "Rs. 1,299.00",
-      image: "https://www.campusshoes.com/cdn/shop/files/FIRST_11G-787_WHT-SIL-B.ORG_1_540x.jpg?v=1738849908",
-      discount: "30% off",
-    },
-    {
-      id: 3,
-      description: "Raasile Black Sneakers",
-      amount: "Rs. 1,599.00",
-      image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/files/VIBGYOR-6G-829-YAN-GOLDEN_2.jpg?v=1738849905",
-      discount: "20% off",
-    },
-    {
-      id: 4,
-      description: "Raasile Green Sneakers",
-      amount: "Rs. 1,799.00",
-      image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/products/ABACUS_6G-221_MOONLIGHT-BLU_2.jpg?v=1738850599",
-      discount: "15% off",
-    },
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProductdetails, fetchProductList} from '../reduxs/slices/product';
+import { CloudCog } from 'lucide-react';
 
-  ];
+
+
+
+
+
+const Productdescription = () => {
+  const navigate = useNavigate();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isproduct, setProduct] = useState(null);
+  const { id } = useParams();
+  console.log(id, "Product ID from URL");
+  const dispatch = useDispatch();
+
+
+  const params = useParams();
+  const { productDetail } = useSelector((state) => state.product)
+
+  const handleProductdetails = async () => {
+    try {
+      const result = await dispatch(fetchProductdetails(id));
+      if (result) {
+
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      return false;
+    }
+
+  }
+  console.log(productDetail, 'productlist')
+
+  useEffect(() => {
+    handleProductdetails();
+
+  }, [id]);
+// filter products on the basis of short title
+console.log(id,"params")
+const shortTitle = productDetail?.title?.shortTitle || "";
+
+// Split the title into words
+const words = shortTitle.trim().split(/\s+/); 
+
+// Get the last 2 or 3 words (adjust the number as needed)
+const lastWords = words.slice(-3).join(" ");
+console.log(lastWords,"show")
+  let filterproduct = { "title.shortTitle": { "$regex": lastWords, "$options": "i" } }
+  console.log(filterproduct,"filter data")
+  const { product } = useSelector(state => state.product)
+  const handleGetProductList = async () => {
+    try {
+      const result = await dispatch(fetchProductList(1, 4, filterproduct));
+
+      if (result) {
+
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      return false;
+    }
+  };
+  console.log(product, 'productdetailsshow')
+
+  useEffect(() => {
+    if(productDetail){
+      handleGetProductList();
+    }
+  }, [id,lastWords]);
+
+
+
+
+
+  
+
   const handleDrawer = () => {
     setDrawerOpen(true);
   }
-const navigate= useNavigate();
+
 
   const colors = [
     "#000000", "#0000FF", "#FAFAD2", "#008000",
@@ -62,50 +108,37 @@ const navigate= useNavigate();
     <div className=' px-4 md:px-8 '>
       <div className=" mt-10 ">
         <div className='md:grid md:grid-cols-12 '>
-       
-        <div className="md:col-span-2 md:block hidden">
-<div className='flex flex-col items-start justify-start'>
 
-<img  className="w-[200px] h-[200px] " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_2.jpg?v=1738849570' alt=''/>
-<img  className="w-[200px] h-[200px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_1.jpg?v=1738849570' alt=''/>
-<img  className="w-[200px] h-[200px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
-<img  className="w-[200px] h-[200px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
-<img  className="w-[200px] h-[200px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
+          <div className="md:col-span-2 md:block hidden">
+            {/* side images */}
+            <div className="flex gap-[90px] flex-wrap">
+              {productDetail?.productImages?.map((img, index) => (
+                <img key={img.id || index} className="w-[150px] h-[80px] object-cover" src={img.path} alt={img.name} />
+              ))}
+            </div>
+          </div>
+          {/* swiper */}
+          <div className="md:col-span-5  mx-[8px]  ">
+            <Swipershoe productDetail={productDetail} />
 
-
-
-
-
-</div>
-    </div>
-        <div className="md:col-span-5  mx-[8px]  ">
-     <Swipershoe/>
-       
-    </div>
-    <div className=" flex  flex-row gap-2 md:hidden">
-<div className='flex flex-row items-start justify-start'>
-
-<img  className="w-[100px] h-[100px] " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_2.jpg?v=1738849570' alt=''/>
-<img  className="w-[100px] h-[100px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_1.jpg?v=1738849570' alt=''/>
-<img  className="w-[100px] h-[100px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
-<img  className="w-[100px] h-[100px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
-<img  className="w-[100px] h-[100px]  " src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_3.jpg?v=1738849570' alt=''/>
-
-
-
-
-
-</div>
-    </div>
+          </div>
+          {/* reponsive sideimages */}
+          <div className=" flex  flex-row gap-2 md:hidden">
+            <div className="flex gap-2 flex-wrap">
+              {productDetail?.productImages?.map((img, index) => (
+                <img key={img.id || index} className="w-[100px] h-[100px] object-cover" src={img.path} alt={img.name} />
+              ))}
+            </div>
+          </div>
           <div className='md:col-span-5 row-span-6  px-4 md:px-8'>
             <div className='flex flex-col gap-4'>
-              <div className='text-lg text-black font-medium'>Raasile White Women Sneakers</div>
-              <div className='text-sm text-red-600 font-medium'>PRICE Rs. 1,229.00</div>
+              <div className='text-lg text-black font-medium'>{productDetail?.title?.shortTitle}</div>
+              <div className='text-sm text-red-600 font-medium'>PRICE Rs. {productDetail?.price?.mrp}</div>
               <div className='text-xs text-gray-500 font-medium'>inclusive of all tax</div>
               <div className='border-b border-gray-400 w-full' />
               <div className='text-sm text-black font-medium'>Colors</div>
               <div className="flex flex-wrap gap-2 p-2">
-                {colors.map((color, index) => (
+                {colors?.map((color, index) => (
                   <div
                     key={index}
                     className="border border-gray-700 w-12 h-10 flex items-center justify-center"
@@ -113,10 +146,10 @@ const navigate= useNavigate();
                   />
                 ))}
               </div>
-              <div className='text-[15px] text-black font-medium'>Raasile White Women Sneakers</div>
-              <div className='text-sm text-black font-medium'>Size (UK)</div>
+              <div className='text-[15px] text-black font-medium'>{productDetail?.title?.shortTitle}</div>
+              <div className='text-sm text-black font-medium'>size(UK)</div>
               <div className='flex flex-wrap gap-2'>
-                {[6, 7, 8, 9, 10].map(size => (
+                {[6, 7, 8, 9, 10]?.map(size => (
                   <button key={size} className='border border-gray-700 w-12 h-10 text-gray-700 hover:bg-black hover:text-white'>{size}</button>
                 ))}
               </div>
@@ -126,7 +159,7 @@ const navigate= useNavigate();
                 <button className='border border-gray-700 w-12 h-10 text-gray-700 '>1</button>
                 <button className='border border-gray-700 w-12 h-10 text-gray-700 '>+</button>
               </div>
-              <div className="text-[15px] text-[400] font-[400] flex items-center justify-center gap-4 text-[#787A7C]"><CiDeliveryTruck size={30}/>Check delivery at your location</div>
+              <div className="text-[15px] text-[400] font-[400] flex items-center justify-center gap-4 text-[#787A7C]"><CiDeliveryTruck size={30} />Check delivery at your location</div>
               <div className='flex items-start justify-start gap-4'>
 
                 <input type='number' placeholder='Enter Your Pincode'
@@ -168,13 +201,13 @@ const navigate= useNavigate();
                         <div className="flex items-start justify-start gap-2 text-[#787A7C] text-[13px] font-[400] flex-1">
 
                           <div className="flex   ">
-                            <img className=' w-[85px]' src='https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_2.jpg?v=1738849570' alt="image"></img>
+                            <img className=' w-[85px]' src={productDetail?.image} alt="image"></img>
                           </div>
                           <div className="flex flex-col gap-3 items-start justify-start text-[#787A7C]  text-[13px] font-[400] flex-1">
-                            <span className='text-black md:text-[#787A7C]'>FIRST White Men's Running Shoes</span>
+                            <span className='text-black md:text-[#787A7C]'>{productDetail?.title?.shortTitle}</span>
                             <span>white</span>
                             <span>6</span>
-                            <span className='md:hidden block'>Rs. 1,899.00</span>
+                            <span className='md:hidden block'>Rs. {productDetail?.price?.mrp}</span>
                           </div>
                         </div>
 
@@ -184,43 +217,43 @@ const navigate= useNavigate();
 
                           <div className="md:flex hidden flex-col gap-3 items-start justify-start text-[#787A7C] text-[13px] font-[400] flex-1">
 
-                            <span>Rs. 1,899.00</span>
-                            <span>Rs. 1,099.00
+                            <span>{productDetail?.price?.cost}</span>
+                            <span>{productDetail?.price?.mrp}
                             </span>
                           </div>
                           <div className="flex flex-row gap-3 items-start justify-start text-[#787A7C] text-[13px] font-[400] flex-1">
-                          <span className='flex md:hidden'>Qty</span>
+                            <span className='flex md:hidden'>Qty</span>
                             <span>1</span>
 
                           </div>
                           <div className="md:flex hidden flex-col gap-3 items-start justify-start text-[#787A7C] text-[13px] font-[400] flex-1">
 
-                            <span>Rs. 1,899.00</span>
-                            <span>Rs. 1,099.00
+                            <span>{productDetail?.price?.cost}</span>
+                            <span>{productDetail?.price?.mrp}
                             </span>
                           </div>
                         </div>
                         <div className="md:flex hidden flex-col items-end justify-end gap-8 text-[#787A7C] text-[13px] font-[400] flex-1">
-                          <span>Rs. 1,099.00</span>
+                          <span>{productDetail?.price?.mrp}</span>
                           <span>Excl. shipping </span>
                           <div className='flex  items-start justify-start gap-4'>
-                            <button onClick={()=> setDrawerOpen(false)} className='border-[1px] border-[#404040] w-[220px] h-[46px]  font-[400] hover:bg-[#1c1d45] hover:text-[white] bg-white text-black'>KEEP SHOPPING</button>
-                            <button onClick={()=> navigate('/cart')} className='border-[1px] border-[#404040] w-[80px] h-[46px]  font-[400] bg-[#1c1d45] text-[white] hover:bg-[#C16452] hover:text-[white] '>CART</button>
+                            <button onClick={() => setDrawerOpen(false)} className='border-[1px] border-[#404040] w-[220px] h-[46px]  font-[400] hover:bg-[#1c1d45] hover:text-[white] bg-white text-black'>KEEP SHOPPING</button>
+                            <button onClick={() => navigate('/cart')} className='border-[1px] border-[#404040] w-[80px] h-[46px]  font-[400] bg-[#1c1d45] text-[white] hover:bg-[#C16452] hover:text-[white] '>CART</button>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="flex md:hidden flex-col items-end justify-end gap-8 text-[#787A7C] text-[13px] font-[400] flex-1 border-t-[1px] border-[#e2e2e2]">
-                    <div className="flex md:hidden items-end justify-end  gap-4 text-[#787A7C] text-[13px] font-[400] flex-1">
-                          <span>Subtotal</span>
-                        </div>
-                          <span className='text-black'>Rs. 1,099.00</span>
-                          <span>Excl. shipping </span>
-                          <div className='flex  items-start justify-start gap-4'>
-                            <button onClick={()=> setDrawerOpen(false)} className='border-[1px] border-[#404040] w-[150px] h-[46px]  font-[400] hover:bg-[#1c1d45] hover:text-[white] bg-white text-black'>KEEP SHOPPING</button>
-                            <button onClick={()=> navigate('/cart')} className='border-[1px] border-[#404040] w-[150px] h-[46px]  font-[400] bg-[#1c1d45] text-[white] hover:bg-[#C16452] hover:text-[white] '>CART</button>
-                          </div>
-                        </div>
+                      <div className="flex md:hidden items-end justify-end  gap-4 text-[#787A7C] text-[13px] font-[400] flex-1">
+                        <span>Subtotal</span>
+                      </div>
+                      <span className='text-black'>Rs. 1,099.00</span>
+                      <span>Excl. shipping </span>
+                      <div className='flex  items-start justify-start gap-4'>
+                        <button onClick={() => setDrawerOpen(false)} className='border-[1px] border-[#404040] w-[150px] h-[46px]  font-[400] hover:bg-[#1c1d45] hover:text-[white] bg-white text-black'>KEEP SHOPPING</button>
+                        <button onClick={() => navigate('/cart')} className='border-[1px] border-[#404040] w-[150px] h-[46px]  font-[400] bg-[#1c1d45] text-[white] hover:bg-[#C16452] hover:text-[white] '>CART</button>
+                      </div>
+                    </div>
                   </div>
 
 
@@ -243,12 +276,7 @@ const navigate= useNavigate();
                   <CiDeliveryTruck size={30} /><span>15 days return</span>
                 </div>
               </div>
-              <p className='text-[15px] font-[600] text-[#787A7C]'>Meet the new chunky number in town, the Campus Stardust Men's Sneakers. Featuring Bubble Yoga
-                Max insole, this pair introduces you to a brand new level of cushioned comfort. The innovative Anti-Slip
-                Sole Design enhances grip, reducing the chances of accidental slips. The mesh & PU upper further ensure breathability and protection, while the
-                outsole engineered with EVA and TPR - offers flexibility and longevity. Making these sneakers a standout
-                choice for men seeking both style & functionality is the dashing design and the vibrant red, blue, and white
-                palette!</p>
+              <p className='text-[15px] font-[600] text-[#787A7C]'>{isproduct?.title?.longTitle}</p>
               <ul className='text-[15px] font-[600] text-[#787A7C] flex flex-col gap-2'>
                 <li>Occasion: Everyday</li>
                 <li>Insole: Super soft</li>
@@ -280,15 +308,15 @@ const navigate= useNavigate();
         </div>
         <div className='text-lg font-medium text-gray-800 text-center mt-10'>You may also like</div>
         <div className='grid grid-cols-2 md:grid-cols-4 gap-6 mx-4 md:mx-8'>
-          {products.map((product, index) => (
+          {product?.map((product, index) => (
             <div key={index} className="group flex flex-col items-start gap-4">
               <CiHeart />
-              <img className="h-48 w-64 object-cover" src={product.image} alt={product.description} />
+              <img className="h-48 w-64 object-cover" src={product.image} alt={product?.title?.shortTitle} />
               <button className="bg-white border border-gray-400 text-gray-900 w-4/5 h-10 rounded opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                 Quick Buy
               </button>
-              <p className="text-black text-sm">{product.description}</p>
-              <span className="text-black text-sm">{product.amount}</span>
+              <p className="text-black text-sm">{product?.title?.shortTitle}</p>
+              <span className="text-black text-sm">{product?.price?.mrp}</span>
               <span className="text-gray-600 text-sm">6 7 8 9 10</span>
             </div>
           ))}

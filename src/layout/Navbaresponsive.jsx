@@ -29,8 +29,8 @@ const Navbarresp = ({ isMobile }) => {
   const Navbardata = [
     { id: 0, tagname: "SALE", Pagenew: <Sale />, path: "/sale" },
     { id: 1, tagname: "NEW ARRIVAL", path: "/newarrival" },
-    { id: 2, tagname: "MEN", Pagenew: <Man />, path: "/man" },
-    { id: 3, tagname: "WOMAN", Pagenew: <Woman />, path: "/woman" },
+    { id: 2, tagname: "MEN", Pagenew: <Man />, path: "/men" },
+    { id: 3, tagname: "WOMAN", Pagenew: <Woman />, path: "/women" },
     { id: 4, tagname: "KIDS", Pagenew: <Kids />, path: "/kids" },
     { id: 5, tagname: "COLLECTION", Pagenew: <Collection />, path: "/Newaarrival" },
     { id: 6, tagname: "TRENDING", Pagenew: <Trending />, path: "/trending" },

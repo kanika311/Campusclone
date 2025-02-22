@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { RxCross2 } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchProductList } from "../reduxs/slices/product";
 
 
 const SearchPage = () => {
 const navigate =useNavigate();
   const [query, setQuery] = useState("");
+
+  const handleGetProduct = async () => {
+    navigate(`/product/${query}`)
+  }
+               
+        
+      
+        
 
 console.log("Navigate function:", navigate);
 
@@ -39,8 +49,8 @@ console.log("Navigate function:", navigate);
       width: "100%" 
     }}
   />
-  <button style={{ background: "none", border: "none", cursor: "pointer" }}>
-    <CiSearch size={22} color="gray" />
+  <button onClick={handleGetProduct} style={{ background: "none", border: "none", cursor: "pointer" } } className="cursor-auto">
+    <CiSearch  size={22} color="gray" className="cursor-auto"/>
   </button>
 </div>
       <RxCross2 onClick={handleSearch} size={30} color="gray" className="flex items-center justify-center"/>

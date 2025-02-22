@@ -1,23 +1,22 @@
 import React, { useState } from "react";
-
 import { Sale } from "../Content/Navbarpages/Sale";
 import Woman from "../Content/Navbarpages/Woman";
 import Man from "../Content/Navbarpages/Man";
-
 import { Trending } from "../Content/Navbarpages/Trending";
-
 import Collection from "../Content/Navbarpages/Collection";
-import { Navigation } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import Kids from "../Content/Navbarpages/Kids";
 
+
+
+
 const Navbardata = [
   { id: 0, tagname: "SALE", Pagenew: <Sale />,path:"/product/sale" },
-  { id: 1, tagname: "NEW ARRIVAL" ,path:"/product/newarrival"},
-  { id: 2, tagname: "MEN", Pagenew: <Man />,path:"/product/man" },
-  { id: 3, tagname: "WOMAN", Pagenew: <Woman />,path:"/product/woman" },
+  { id: 1, tagname: "NEW ARRIVAL" ,path:"/product/collection"},
+  { id: 2, tagname: "MEN", Pagenew: <Man />,path:"/product/men" },
+  { id: 3, tagname: "WOMAN", Pagenew: <Woman />,path:"/product/women" },
   { id: 4, tagname: "KIDS", Pagenew: <Kids />,path:"/product/kids" },
-  { id: 5, tagname: "COLLECTION", Pagenew: <Collection /> ,path:"/product/newarrival"},
+  { id: 5, tagname: "COLLECTION", Pagenew: <Collection /> ,path:"/product/collection"},
   { id: 6, tagname: "TRENDING", Pagenew: <Trending /> ,path:"/product/trending"},
 
 ];
@@ -34,10 +33,10 @@ navigate(path);
     <div className="md:block hidden">
     <div 
       className="w-full bg-white border-b relative "
-      onMouseLeave={() => setActiveItem(null)} // 🔹 Jab mouse bahar jaye to close kar do
+      onMouseLeave={() => setActiveItem(null)} 
     >
       {/* Navbar Section */}
-      <div className="h-auto flex p-6 items-center justify-center">
+      <div className="h-auto flex p-4 items-center justify-center">
         <div className="flex items-start justify-start space-x-8">
           {Navbardata.map((item) => (
       

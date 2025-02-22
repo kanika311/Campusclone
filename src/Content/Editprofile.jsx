@@ -1,13 +1,13 @@
 import React from 'react'
 
-const Editprofile = () => {
+const Editprofile = ({user}) => {
   return (
     <div className='flex flex-col items-start justify-start gap-10 mr-[40px] '>
-      <div className='bg-[#f9f9f9] h-[160px] w-full p-[20px]'>
-        <div className='text-[black] text-[22px] font-[400]'>Kanika Aggarwal</div>
-        <div className='text-[black] text-[22px] font-[400]'>+91789675689</div>
+      <div className='bg-[#f9f9f9] h-[160px] w-full p-[15px]'>
+        <div className='text-[black] text-[22px] font-[400]'>{user.name}</div>
+    
 
-        <div className='text-[#787A7C] text-[14px] font-[400]'>aggarwalkanika676@gmail.com</div>
+        <div className='text-[#787A7C] text-[14px] font-[400] mt-[20px]'>{user.email}</div>
       </div>
       <div className='flex flex-col items-start justify-start gap-4 w-full '>
         <div className='text-[13px] font-[400] text-black'>Edit Your Account</div>

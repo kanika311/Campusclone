@@ -6,15 +6,17 @@ import SearchPage from './Content/Search';
 import Header from './layout/header.jsx';
 import Navbar from './layout/Navbar.jsx';
 import Footer from './layout/Footer.jsx';
-import Mainsale from './Content/Mainsale.jsx';
+import Mainsale from './Content/Product.jsx';
 
 import Account from './Content/Account.jsx';
 import { ShoppingCart } from 'lucide-react';
 import Shoppingcart from './Content/Shoppingcart.jsx';
 import Productdescription from './Component/Productdescription.jsx';
 import Payment from './Content/Payment.jsx';
-import Profilesidebar from './layout/Profilesidebar.jsx';
+
 import Orderdetails from './Content/Orderdetails.jsx';
+import Signup from './Content/Signup.jsx';
+import Profilesidebar from './Content/profile.jsx';
 
 export default function App() {
 
@@ -94,6 +96,11 @@ const Layout = ({ children }) => (
         />
                          
       <Route path="/search" element={<SearchPage />} />
+      <Route path="/signUp" element=
+      {
+      <Layout>
+      <Signup />
+      </Layout>} />
        <Route path="/slider" element={<SwiperSlider/>} /> 
        <Route path="/checkouts" element={<Payment/>} /> 
        <Route path="/profile" element={

@@ -1,104 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiSolidUpArrow } from "react-icons/bi";
 import { CgMenuGridO } from "react-icons/cg";
 import { MdFormatListBulleted } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { CiHeart } from 'react-icons/ci';
-import Box from '@mui/material/Box';
+
 import Slider from '@mui/material/Slider';
-import { Drawer } from '@mui/material';
+import { Drawer, Pagination, Typography } from '@mui/material';
 import { RxCross1 } from 'react-icons/rx';
 import { BiSliderAlt } from "react-icons/bi";
 import { useNavigate, useParams } from 'react-router-dom';
+import { shallowEqual, useDispatch} from 'react-redux';
+import { useSelector } from 'react-redux';
+import {  fetchProductList } from '../reduxs/slices/product'
+
+import Box from "@mui/material/Box";
+
 
 const Products = () => {
   const navigate=useNavigate();  
-  const products = [
-        {
-            id: 1,
-            description: "Raasile White Women Sneakers",
-            amount: "Rs. 1,229.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/products/KIZER_22G-215_BLU-RED_2.jpg?v=1738849570",
-            discount: "51% off",
-        },
-        {
-            id: 2,
-            description: "Raasile Blue Women Sneakers",
-            amount: "Rs. 1,299.00",
-            image: "https://www.campusshoes.com/cdn/shop/files/FIRST_11G-787_WHT-SIL-B.ORG_1_540x.jpg?v=1738849908",
-            discount: "30% off",
-        },
-        {
-            id: 3,
-            description: "Raasile Black Sneakers",
-            amount: "Rs. 1,599.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/files/VIBGYOR-6G-829-YAN-GOLDEN_2.jpg?v=1738849905",
-            discount: "20% off",
-        },
-        {
-            id: 4,
-            description: "Raasile Green Sneakers",
-            amount: "Rs. 1,799.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/products/ABACUS_6G-221_MOONLIGHT-BLU_2.jpg?v=1738850599",
-            discount: "15% off",
-        },
-        {
-            id: 5,
-            description: "Raasile Blue Women Sneakers",
-            amount: "Rs. 1,299.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/files/TERMINATOR_N__5G-846_GRY-D.GRY_2.jpg?v=1738850026",
-            discount: "30% off",
-        },
-        {
-            id: 6,
-            description: "Raasile Black Sneakers",
-            amount: "Rs. 1,599.00",
-            image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-            discount: "20% off",
-        },
-        {
-            id: 7,
-            description: "Raasile Green Sneakers",
-            amount: "Rs. 1,799.00",
-            image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-            discount: "15% off",
-        },
-        {
-            id: 8,
-            description: "Raasile Blue Women Sneakers",
-            amount: "Rs. 1,299.00",
-            image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-            discount: "30% off",
-        },
-        {
-            id: 9,
-            description: "Raasile Black Sneakers",
-            amount: "Rs. 1,599.00",
-            image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-            discount: "20% off",
-        },
-        {
-            id: 10,
-            description: "Raasile Green Sneakers",
-            amount: "Rs. 1,799.00",
-            image: "https://img.freepik.com/free-photo/fashion-shoes_74190-2601.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid",
-            discount: "15% off",
-        },
-        {
-            id: 11,
-            description: "Raasile Green Sneakers",
-            amount: "Rs. 1,799.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/products/ABACUS_6G-221_MOONLIGHT-BLU_2.jpg?v=1738850599",
-            discount: "15% off",
-        },
-        {
-            id: 12,
-            description: "Raasile Blue Women Sneakers",
-            amount: "Rs. 1,299.00",
-            image: "https://cdn.shopify.com/s/files/1/0607/6678/1671/files/TERMINATOR_N__5G-846_GRY-D.GRY_2.jpg?v=1738850026",
-            discount: "30% off",
-        },
-    ];
+ 
     const Data = [
         { Number: '1', length: "(73)" },
         { Number: '2', length: "(125)" },
@@ -135,65 +56,124 @@ const Products = () => {
         "#808000", "#FFEBCD", "#FFC0CB", "#800080",
         "#FF0000", "#008080", "#FFFF00"
     ];
-    const [Filter, setFilter] = useState(false);
-
-    const [sizeFilter, setSizeFilter] = useState(false);
+    const [isFilter, setFilter] = useState(false);
+     const [sizeFilter, setSizeFilter] = useState(false);
     const [colorFilter, setColorFilter] = useState(false);
     const [typeFilter, setTypeFilter] = useState(false);
     const [mobileFilterOpen,setMobileFilterOpen]=useState(false);
     const [sortOpen, setSortOpen] = useState(false);
-    const   handleproduct=()=>{
-      navigate('/productdetail/5465');
-    }
+    const handleproduct = (productId) => {
+      navigate(`/productdetail/${productId}`);
+    };
+    // according to params value change
     const params = useParams();
     console.log(params, 'params');
-    let data= {};
-    if (params.type === 'sale') {
-      data = {
-        saleCategory:"sale",
-        NumberOfProduct:"2409",
-        image:"https://img.freepik.com/free-vector/colorful-sale-banner-template_1361-1223.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid"
-      }
-    }
-    if (params.type === 'newarrival') {
-      data = {
-        saleCategory :"New arrival",
-        NumberOfProduct :"50",
-        image : "https://img.freepik.com/premium-psd/fashion-collection-facebook-template_23-2151224695.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+   
+    let data = {};
 
-      }
+    switch (params.type) {
+      case 'sale':
+        data = {
+          saleCategory: "Sale",
+          NumberOfProduct: "2409",
+          image: "https://img.freepik.com/free-vector/colorful-sale-banner-template_1361-1223.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid"
+        };
+        break;
+    
+      case 'collection':
+        data = {
+          saleCategory: "New Arrival",
+          NumberOfProduct: "50",
+          image: "https://img.freepik.com/premium-psd/fashion-collection-facebook-template_23-2151224695.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+        };
+        break;
+    
+      case 'men':
+        data = {
+          saleCategory: "Men's Sale Store",
+          NumberOfProduct: "1560",
+          image: "https://img.freepik.com/premium-photo/legs-three-persons-wearing-jeans_23-2147732062.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+        };
+        break;
+    
+      case 'kids':
+        data = {
+          saleCategory: "Kids Footwear",
+          NumberOfProduct: "520",
+          image: "https://img.freepik.com/premium-photo/baby-concept-with-pairs-shoes-love-letters_23-2147665757.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+        };
+        break;
+    
+      case 'women':
+        data = {
+          saleCategory: "Women's Footwear",
+          NumberOfProduct: "1000",
+          image: "https://img.freepik.com/free-photo/still-life-say-no-fast-fashion_23-2149669603.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+        };
+        break;
+    
+      case 'trending':
+        data = {
+          saleCategory: "Top Selling",
+          NumberOfProduct: "200",
+          image: "https://img.freepik.com/premium-photo/giant-sneaker-urban-environment_23-2150760353.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+        };
+        break;
+    
+      default:
+        data = {
+          saleCategory: "Unknown",
+          NumberOfProduct: "0",
+          image: "https://img.freepik.com/free-psd/shoe-store-concept-banner-template_23-2148738803.jpg?ga=GA1.1.416566523.1736844263&semt=ais_hybrid" // Placeholder image for unknown category
+        };
+        break;
     }
-    if (params.type === 'man') {
-      data = {
-        saleCategory:"Man sale store",
-        NumberOfProduct:"1560",
-        image:"https://img.freepik.com/premium-photo/legs-three-persons-wearing-jeans_23-2147732062.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
+    
+    console.log(data);
+    
+    //pagination
+    const [page, setPage] = React.useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
 
+//productdetails api call
+    const dispatch =useDispatch();
+    const {product,productPaginator} = useSelector(state => state.product);
+    
+console.log(productPaginator,"paginate")
+    let filterproduct = { 
+      $or: [
+        { category: { $regex: `${params?.type}`, $options: "i" } },
+        {'title.shortTitle': { $regex: `${params?.type}`, $options: "i" } }
+      ]
+    };
+    
+    console.log("After setting:", filterproduct); 
+  
+    const handleGetProductList = async () => {
+      try {
+       
+      
+        const result = await dispatch(fetchProductList(page,8,filterproduct)); 
+   
+      
+        return !!result;
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        return false;
       }
-    }
-    if (params.type === 'kids') {
-      data = {
-        saleCategory:"Kids Footwear",
-        NumberOfProduct:"520",
-        image:"https://img.freepik.com/premium-photo/baby-concept-with-pairs-shoes-love-letters_23-2147665757.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
-
-      }
-    }
-    if (params.type === 'woman') {
-      data = {
-        saleCategory:"Women's Footwear",
-        NumberOfProduct:"1000",
-        image:"https://img.freepik.com/free-photo/still-life-say-no-fast-fashion_23-2149669603.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
-      }
-    }
-    if (params.type === 'trending') {
-      data = {
-        saleCategory: "Top sailing",
-        NumberOfProduct: "200",
-        image: "https://img.freepik.com/premium-photo/giant-sneaker-urban-environment_23-2150760353.jpg?ga=GA1.1.416566523.1736844263&semt=ais_authors_boost"
-      }
-    }
-    console.log(data,'data')
+    };
+           console.log(product,'productlist')
+                 
+           useEffect(() => {
+            console.log("Params changed:", params);
+           handleGetProductList();
+          }, [params,page]);
+      
+          
+         
+          
     return (
         <div className="flex flex-col items-center justify-center mb-10">
         <div className="w-[100%]">
@@ -212,11 +192,11 @@ const Products = () => {
       
               {/* PRICE FILTER */}
               <div className="text-black font-bold text-[14px] border-b border-[#b4b1b1]">
-                <div onClick={() => setFilter(!Filter)} className="flex items-center justify-between p-2 cursor-pointer">
+                <div onClick={() => setFilter(!isFilter)} className="flex items-center justify-between p-2 cursor-pointer">
                   PRICE
-                  <BiSolidUpArrow className={`transition-transform ${Filter ? "rotate-180" : ""}`} />
+                  <BiSolidUpArrow className={`transition-transform ${isFilter ? "rotate-180" : ""}`} />
                 </div>
-                {Filter && (
+                {isFilter && (
                   <div>
                     <div className="flex items-center justify-center">
                       <input type="number" className="w-[45%] h-[33px] border border-[#b4b1b1] px-2" />
@@ -236,7 +216,7 @@ const Products = () => {
                 </div>
                 {sizeFilter && (
                   <div className="flex flex-col gap-2 h-[200px] overflow-auto">
-                    {Data.map((items, index) => (
+                    {Data?.map((items, index) => (
                       <div key={index} className="flex justify-between">
                         <label className="flex items-center text-[#b4b1b1]">
                           <input type="checkbox" className="mr-2" />
@@ -257,7 +237,7 @@ const Products = () => {
                 </div>
                 {colorFilter && (
                   <div className="grid grid-cols-5 gap-2 p-2">
-                    {colors.map((color, index) => (
+                    {colors?.map((color, index) => (
                       <div
                         key={index}
                         className="w-8 h-8 rounded-full border-2 transition-all hover:border-gray-500 cursor-pointer"
@@ -276,7 +256,7 @@ const Products = () => {
                 </div>
                 {typeFilter && (
                   <div className="flex flex-col gap-2 h-[200px] overflow-auto">
-                    {Listdata.map((items, index) => (
+                    {Listdata?.map((items, index) => (
                       <div key={index} className="flex justify-between text-[#b4b1b1]">
                         <span>{items.name}</span>
                         <span>{items.number}</span>
@@ -318,11 +298,11 @@ const Products = () => {
       
               {/* PRICE FILTER */}
               <div className="text-black font-bold text-[14px] border-b border-[#b4b1b1]">
-                <div onClick={() => setFilter(!Filter)} className="flex items-center justify-between p-2 cursor-pointer">
+                <div onClick={() => setFilter(!isFilter)} className="flex items-center justify-between p-2 cursor-pointer">
                   PRICE
-                  <BiSolidUpArrow className={`transition-transform ${Filter ? "rotate-180" : ""}`} />
+                  <BiSolidUpArrow className={`transition-transform ${isFilter ? "rotate-180" : ""}`} />
                 </div>
-                {Filter && (
+                {isFilter && (
                   <div>
                     <div className="flex items-center justify-center">
                       <input type="number" className="w-[45%] h-[33px] border border-[#b4b1b1] px-2" />
@@ -342,7 +322,7 @@ const Products = () => {
                 </div>
                 {sizeFilter && (
                   <div className="flex flex-col gap-2 h-[200px] overflow-auto">
-                    {Data.map((items, index) => (
+                    {Data?.map((items, index) => (
                       <div key={index} className="flex justify-between">
                         <label className="flex items-center text-[#b4b1b1]">
                           <input type="checkbox" className="mr-2" />
@@ -363,7 +343,7 @@ const Products = () => {
                 </div>
                 {colorFilter && (
                   <div className="grid grid-cols-5 gap-2 p-2">
-                    {colors.map((color, index) => (
+                    {colors?.map((color, index) => (
                       <div
                         key={index}
                         className="w-8 h-8 rounded-full border-2 transition-all hover:border-gray-500 cursor-pointer"
@@ -382,7 +362,7 @@ const Products = () => {
                 </div>
                 {typeFilter && (
                   <div className="flex flex-col gap-2 h-[200px] overflow-auto">
-                    {Listdata.map((items, index) => (
+                    {Listdata?.map((items, index) => (
                       <div key={index} className="flex justify-between text-[#b4b1b1]">
                         <span>{items.name}</span>
                         <span>{items.number}</span>
@@ -436,23 +416,40 @@ const Products = () => {
             </div>
       
             {/* Product Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
-              {products.map((product, index) => (
-                <div    onClick={handleproduct} key={index} className="group flex flex-col items-start">
-                  <CiHeart />
-                  <img className="h-[200px] w-[305px]" src={product.image} alt={product.description} />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10 mt-[40px]">
+              {product &&  product?.map((item) => (
+                <div   onClick={() => handleproduct(item.id)} key={item?.id} className="group flex flex-col  gap-2">
+                 <div className='flex items-end justify-end'><CiHeart size={25} /></div>
+                  <img className="h-[200px] w-full object-contain" src={item?.image} alt='' />
+                  
                   <button className="bg-white border border-[#787A7C] text-[#212B36] w-full h-[38px] rounded opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                     Quick Buy
                   </button>
-                  <p className="text-[#787A7C] text-[14px]">{product.description}</p>
-                  <span className="text-[#787A7C] text-[14px]">{product.amount}</span>
+                  <p className="text-[#787A7C] text-[14px] font-[400]">{item?.title?.shortTitle}</p>
+                  <span className="text-black text-[14px] font-[400]">Rs.{item?.price?.mrp}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       
-        <div className="text-[#964233] mt-4">1 2 3 ..... 100</div>
+        <div className="">
+        <Box
+                sx={{
+                    margin: "auto",
+                    width: "fit-content",
+                    alignItems: "center",
+                }}
+            >
+             
+                
+                <Pagination count={productPaginator?.pageCount
+} page={page} 
+                
+                  onChange={handleChange} />
+            </Box>
+
+        </div>
       </div>
       
     )

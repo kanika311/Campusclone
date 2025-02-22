@@ -5,9 +5,26 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Button, Card, CardContent } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { FetchCart } from "../reduxs/slices/Cart";
 
 export default function Cart() {
-
+const dispatch= useDispatch();
+const {product}=useSelector((state)=>state.product);
+const handleCartProduct=async()=>{
+const result =await dispatch(FetchCart());
+if(result){
+  return true;
+}
+};
+console.log(product,"product detail");
+useEffect(()=>{
+  handleCartProduct();
+},[])
+  
+       
+        
   const carddata = [
     {
       id: 1,
