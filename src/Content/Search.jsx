@@ -8,18 +8,13 @@ import { fetchProductList } from "../reduxs/slices/product";
 
 const SearchPage = () => {
 const navigate =useNavigate();
-  const [query, setQuery] = useState("");
-
-  const handleGetProduct = async () => {
+// send search value as a params to filter data
+const [query, setQuery] = useState("");
+ const handleGetProduct = async () => {
     navigate(`/product/${query}`)
   }
                
-        
-      
-        
-
-console.log("Navigate function:", navigate);
-
+// on click cross 
   const handleSearch=()=>{
 
     navigate('/')
@@ -40,6 +35,7 @@ console.log("Navigate function:", navigate);
     type="text"
     value={query}
     onChange={(e) => setQuery(e.target.value)}
+   
     placeholder="Search..."
     style={{
       border: "none",

@@ -1,5 +1,6 @@
-import { authApi } from "../../mocks/authapi";
+
 import {Slice, createSlice} from "@reduxjs/toolkit";
+import { authApi } from "../../mocks/authapi";
 const initialState = {
     user:{},
     loading:false,
@@ -15,9 +16,10 @@ const slice = createSlice({
             console.log(data)
          state.user = data
         },
-        updateUser(state,action){
-            let data = action.payload.data
-        state.user = {...state.user, ...data}
+        Updateuser(state,action){
+            let data = {...action.payload.data}
+       console.log(data)
+            state.user =data;
         },
        
 
@@ -42,17 +44,17 @@ export const getUser = () => async (dispatch) =>{
     }
 }
 
-// export const updateUser = (data,id)=> async (dispatch) =>{
-//     console.log(data)
-//     // const result = await authApi.updateUser(data,id);
-//     console.log(result)
-//     if(result){
-//         await dispatch(slice.actions.updateUser(result))
-//         return true
-//     }
-//     return false
+export const updateUser = (data,id)=> async (dispatch) =>{
+    console.log(data)
+    const result = await authApi.UpdateUser(data,id);
+    console.log(result)
+    if(result){
+        await dispatch(slice.actions.Updateuser(result))
+        return true
+    }
+    return false
     
-// }
+}
 
 
 

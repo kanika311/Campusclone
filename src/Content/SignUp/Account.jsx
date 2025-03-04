@@ -1,31 +1,38 @@
 import { useFormik } from "formik";
-// Ensure schema is imported
+
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountValidation } from "./AccountValidation";
-import { authApi } from "../mocks/authapi";
+import { authApi } from "../../mocks/authapi";
+import { useState } from "react";
+import { CircularProgress } from "@mui/material";
+
 
 const Account = () => {
   const initialValues = {
     username: "",
-    password: "" // Ensure lowercase key
+    password: "" 
   };
+
   const navigate =useNavigate();
+  const[loader,setLoader]=useState(false);
 
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues,
     validationSchema: AccountValidation,
    onSubmit: async (values,action) => {  
+    setLoader(true);
                  console.log(values,'values'); 
                  if(values){
                      const result =  await authApi.login(values)
                     
                      if(result?.status === 'SUCCESS'){
+                      setLoader(false);
                        console.log(result,'result')
                       localStorage.setItem('token',result?.data?.token)
                 
                        navigate('/')
-                       console.log('navigate')
+                    
                        action.resetForm()
                        
                
@@ -36,9 +43,11 @@ const Account = () => {
                  
                },
   });
+ 
 
   return (
     <div >
+      
       <form onSubmit={handleSubmit} className="flex flex-col md:items-center justify-center items-start md:p-0 p-2  h-screen  border-2">
         <div className="bg-white w-full max-w-md">
           <h2 className="text-[32px] font-[400] text-center mb-4">Login</h2>
@@ -79,7 +88,7 @@ const Account = () => {
 
           {/* Login Button */}
           <button type="submit" className="w-full bg-gray-900 text-white py-2 mt-4 rounded-lg hover:bg-gray-700">
-            Login
+           {loader?<CircularProgress size={20}/>:"Login"} 
           </button>
 
           {/* Divider */}
@@ -96,7 +105,7 @@ const Account = () => {
             </button>
             <div className="flex items-center justify-center gap-10">
               <Link to="/signup" className="hover:text-red-900 text-black text-sm underline">SignUp</Link>
-              <Link to="/Forget-password" className="hover:text-red-900 text-black text-sm underline">Forget password</Link>
+              <Link to="/forgetpassword" className="hover:text-red-900 text-black text-sm underline">Forget password</Link>
             </div>
           </div>
         </div>

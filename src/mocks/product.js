@@ -6,14 +6,14 @@ import axios from "axios"
 class ProductApi  {
 
 
-    async getProductList(page,limit,filter){
+    async getProductList(page,limit,filter,sort){
         try {
 
             let obj = {
                 "query":filter,
                 "options": {
                   "collation": "",
-                  "sort": {"name":1},
+                  "sort": { "price.mrp": sort === "asc" ? 1 : -1 },
                   "populate": "",
                   "projection": "",
                   "lean": false,

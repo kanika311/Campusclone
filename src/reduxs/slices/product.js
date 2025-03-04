@@ -32,9 +32,9 @@ const productSlice = createSlice({
 export const{reducer}= productSlice;
 
 
-export const fetchProductList = (page,limit,filter={}) => async (dispatch) => {
+export const fetchProductList = (page,limit,filter={},sort) => async (dispatch) => {
     try {
-      const result = await productApi.getProductList(page,limit,filter) // ✅ Call the API function
+      const result = await productApi.getProductList(page,limit,filter,sort) // ✅ Call the API function
       
   
       if (result) {

@@ -7,16 +7,18 @@ import Header from './layout/header.jsx';
 import Navbar from './layout/Navbar.jsx';
 import Footer from './layout/Footer.jsx';
 import Mainsale from './Content/Product.jsx';
+import Account from './Content/SignUp/Account.jsx';
 
-import Account from './Content/Account.jsx';
-import { ShoppingCart } from 'lucide-react';
 import Shoppingcart from './Content/Shoppingcart.jsx';
 import Productdescription from './Component/Productdescription.jsx';
-import Payment from './Content/Payment.jsx';
 
-import Orderdetails from './Content/Orderdetails.jsx';
-import Signup from './Content/Signup.jsx';
+import Orderdetails from './Content/Orderdetail.jsx';
+import Signup from './Content/SignUp/Signup.jsx';
 import Profilesidebar from './Content/profile.jsx';
+import ForgetPassword from './Content/Editpassword/ForgetPassword.jsx';
+import Resetpassword from './Content/Editpassword/Resetpassword.jsx';
+import Checkout from './Content/CheckOut.jsx';
+
 
 export default function App() {
 
@@ -70,6 +72,22 @@ const Layout = ({ children }) => (
             </Layout>
           }
         />
+        <Route
+          path="/forgetpassword"
+          element={
+            <Layout>
+              <ForgetPassword/>
+            </Layout>
+          }
+        />
+        <Route
+        path="/resetpassword"
+        element={
+          <Layout>
+            <Resetpassword/>
+            </Layout>
+        }
+        />
           <Route
           path="/cart"
           element={
@@ -87,7 +105,7 @@ const Layout = ({ children }) => (
           }
         />
           <Route
-          path="/orderdetails"
+          path="/orderdetails/:id"
           element={
             <Layout>
               <Orderdetails/>
@@ -102,7 +120,7 @@ const Layout = ({ children }) => (
       <Signup />
       </Layout>} />
        <Route path="/slider" element={<SwiperSlider/>} /> 
-       <Route path="/checkouts" element={<Payment/>} /> 
+       <Route path="/checkouts" element={<Checkout/>} /> 
        <Route path="/profile" element={
         <Layout>
             <Profilesidebar/>

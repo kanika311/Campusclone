@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import campuslogo from '../assets/campuslogo.avif'
 import { CiHeart, CiSearch } from "react-icons/ci";
@@ -16,6 +16,9 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { FaWhatsappSquare } from "react-icons/fa";
 
 import { GrSearch } from "react-icons/gr";
+import { CloudCog } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCartlist } from "../reduxs/slices/Cart";
 
 const Header = () => {
   const [isNavbarOpen, setNavbarOpen] = useState(false);
@@ -23,6 +26,34 @@ const Header = () => {
   const handleNavigation = () => {
     navigate('/search')
   }
+  const token = localStorage.getItem('token');
+  console.log(token,"gettoken")
+
+  const {cartList,paginator} = useSelector((state) => state.cart);
+  const dispatch=useDispatch();
+  const handleCartList=() =>{
+  try {
+    const response = dispatch(getCartlist(1,10, {"isDeleted":false}));
+    if(response){
+      console.log("founddata",response)
+  return response;
+  
+    }
+    else{
+      console.log("notfound")
+    }
+  } catch (error) {
+    console.log(error,"error in list api")
+   return error; 
+  }
+  }
+  console.log(cartList,"cartlist")
+  useEffect(() => {
+    handleCartList();
+  }, []);
+  console.log(cartList,"items of ca");
+console.log(paginator?.itemCount,"counts")
+let cartItem=paginator?.itemCount
   return (
     <div className="w-full">
       <div className="flex items-center justify-between p-4 md:p-6">
@@ -75,11 +106,21 @@ const Header = () => {
 
         {/* 🟢 Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/account" className="hover:text-red-900 text-black text-sm">Account</Link>
+        <Link to={token ? "/profile" : "/account"} className="hover:text-red-900 text-black text-sm">Account</Link>
           
-          <Link to="/cart" className="hover:text-red-900 text-black text-sm flex items-center gap-1">
-            Cart <CiShoppingCart size={24} />
-          </Link>
+        <Link to="/cart" className="hover:text-red-900 text-black text-sm relative">
+          {/* Cart Count Badge */}
+        
+          {cartItem > 0 && (
+            <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+              {cartItem}
+            </span>
+          )}
+
+          {/* Cart Icon */}
+          
+          <CiShoppingCart size={24} />
+        </Link>
          
         </div>
 

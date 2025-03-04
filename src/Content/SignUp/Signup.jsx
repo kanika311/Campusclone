@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from "formik";
 import{GoogleAuthProvider,signInWithPopup,getAuth} from 'firebase/auth';
 import { FaGoogle } from "react-icons/fa";
-import {app} from '../Firebase/Firebase'
-import { Link } from "react-router-dom";
+
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {SignupValidation} from './SignupValidation';
-import { authApi } from '../mocks/authapi';
+import { authApi } from '../../mocks/authapi';
+import { CircularProgress } from '@mui/material';
 
 
 // // google login
@@ -51,16 +52,22 @@ const Signup = () => {
         password: "",
         name:"" 
       };
+      const navigate=useNavigate();
+
+      const [progress,setProgress] = useState(false);
     
       const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues,
         validationSchema: SignupValidation, 
       onSubmit: async (values,action) => {  
+        setProgress(true)
                console.log(values,'values'); 
                if(values){
                    const result =  await authApi.register(values)
                   
                    if(result?.status === 'SUCCESS'){
+                    setProgress(false);
+                    navigate('/account')
                      console.log(result,'result')
                      
                      action.resetForm()
@@ -132,7 +139,8 @@ const Signup = () => {
 
           {/* Login Button */}
           <button type="submit" className="w-full bg-gray-900 text-white py-2 mt-4 rounded-lg hover:bg-gray-700">
-          Signup
+            {progress ? <CircularProgress size="small"/> : "Signup"}
+          
           </button>
 
           {/* Divider */}
