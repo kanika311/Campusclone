@@ -52,9 +52,9 @@ const CartSlice =createSlice ({
 export const {reducer} = CartSlice;
 
 
-export const FetchCart=(data)=> async (dispatch) =>{
+export const FetchCart=(data,navigate)=> async (dispatch) =>{
     try {
-       const result =await CartApi.createCart(data);
+       const result =await CartApi.createCart(data,navigate);
        if (result){
         await dispatch(CartSlice.actions.CreateCart(result))
         return result;

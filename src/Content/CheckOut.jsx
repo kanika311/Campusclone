@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import campuslogo from '../assets/campuslogo.avif';
-import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineCancel, MdOutlineShoppingBag } from "react-icons/md";
+import { MdDelete, MdDeleteOutline, MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineCancel, MdOutlineShoppingBag } from "react-icons/md";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import '../Component/Swiper.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateAddress, EditUserAddress, fetchAddress } from '../reduxs/slices/Address';
+import { CreateAddress, DeleteUserAddress, EditUserAddress, fetchAddress } from '../reduxs/slices/Address';
 
 import { useFormik } from 'formik';
 import { editValidation, UserValidation } from './SignUp/SignupValidation';
 import { createOrder } from '../reduxs/slices/Order';
 import { Dialog } from '@mui/material';
 import { getCartlist, softDeleteItem } from '../reduxs/slices/Cart';
+import { CiEdit, CiLocationOn } from 'react-icons/ci';
 
 const Checkout = () => {
   const location = useLocation();
@@ -22,7 +23,11 @@ const Checkout = () => {
 const[myOrder,SetMyorder]=useState(false)
   const dispatch = useDispatch();
   const cartList = location.state?.cartList || [];
- 
+   const [isPopup, setPopup] = useState(false);
+
+   const handleDeltePopup = () => {
+     setPopup(true);
+   }
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   // for total cart item
@@ -34,18 +39,23 @@ const[myOrder,SetMyorder]=useState(false)
   }, 0);
   //   craete address
   const { address } = useSelector((state) => state.addressauth)
+
+  const [locationData, setLocationData] = useState({
+    locality: "",
+    city: "",
+    country: "India",
+    zipcode: "",
+  });
+  
   const initialValues = {
-
-    email: '',
-    name: '',
-    lastName: '',
-    locality: '',
-    city: '',
-    country: 'india',
-    zipcode: '',
-    phone: '',
-
-
+    email: "",
+    name: "",
+    lastName: "",
+    locality: locationData.locality,
+    city: locationData.city,
+    country: locationData.country,
+    zipcode: locationData.zipcode,
+    phone: "",
   };
   const formik = useFormik({
     initialValues,
@@ -59,6 +69,7 @@ const[myOrder,SetMyorder]=useState(false)
 
         if (result) {
           console.log('user address successfully added', result);
+          handleAddressList();
 
           setForm(false);
         } else {
@@ -213,6 +224,70 @@ SetMyorder(true);
         console.log(error, "❌ Error in soft delete API");
     }
 };
+// Delete address
+  const handleDeleteAddress = async (id) => {
+    console.log(id, 'addressid')
+    try {
+      const result = await dispatch(DeleteUserAddress(id));
+      if (result) {
+        console.log(result, 'delete');
+        handleAddressList();
+        return result;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      return false;
+    }
+  }
+// current location
+const handleCurrentlocation=async()=>{
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+     async (position)=>{
+        console.log(position,"current position")
+        console.log(position.coords.longitude,"longitude")
+        console.log(position.coords.latitude,"latitude")
+        try {
+          const response = await fetch(
+            `https://api.geoapify.com/v1/geocode/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&apiKey=9c59c650c372444cb8485f97cc1091a0`
+          );
+          const data = await response.json();
+          
+          if (data && data.features.length > 0) {
+            const locationDetails = data.features[0].properties;
+            console.log(locationDetails, "📍 Geolocation Address");
+
+            setLocationData({
+              locality: locationDetails.address_line1 || "",
+              city: locationDetails.city || "",
+              country: locationDetails.country || "India",
+              zipcode: locationDetails.postcode || "",
+            });
+
+          
+           
+          }
+        } catch (error) {
+          console.log(error, "❌ Error Fetching Address");
+        }
+      },
+      (error)=>{
+        console.log(error,"error ")
+      }
+    );
+  }
+
+}
+useEffect(() => {
+  formik.setValues({
+    ...formik.values,
+    locality: locationData.locality,
+    city: locationData.city,
+    country: locationData.country,
+    zipcode: locationData.zipcode,
+  });
+}, [locationData]);
 
 
   return (
@@ -315,6 +390,17 @@ SetMyorder(true);
               <form onSubmit={formik.handleSubmit} className='flex flex-col w-full gap-4'>
                 <div className='text-black text-[19px]'>ADD A NEW ADDRESS</div>
                 <div className='flex flex-col gap-2 w-full'>
+                <button
+  type="submit"
+  onClick={() => {
+    handleCurrentlocation()
+    console.log(formik.errors, "error");
+    console.log(address, "address");
+  }}
+  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 active:scale-95 transition-all duration-300 shadow-lg text-white h-[50px] w-[250px]  flex items-center justify-center gap-[10px] rounded-[10px] font-[400] "
+>
+  <CiLocationOn size={24} /> Use Current Location
+</button>
                   <label className='text-[14px] text-[#787A7C] font-[400]'>First Name</label>
                   <input id="filled-basic" placeholder='First Name' value={formik.values.name} name="name" onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -389,19 +475,23 @@ SetMyorder(true);
                   <span>Set as default address</span>
                 </div>
 
-                <button type="submit"
+       
+
+              <div className='flex items-center justify-start gap-10'>
+              <button type="submit"
                   onClick={() => {
                     console.log(formik.errors, "error")
                     console.log(address, 'address')
                   }} className='bg-black h-[47px] w-[150px] text-white'>Add Address</button>
-                <div onClick={() => { setForm(false) }} className='text-[#964233] text-[15px] font-[400] mt-[4px]'>cancel</div>
+          <button onClick={() => { setForm(false) }} className='text-[white] text-[18px] font-[400]  bg-[#964233]  h-[47px] w-[150px]'>cancel</button>
+          </div>
               </form>
             )}
 
 
           </div>
           {/* /to re render address */}
-          <div className='flex flex-col items-center justify-center gap-4'>
+          <div className='flex flex-col items-center justify-center gap-4 mt-[20px]'>
             {Array.isArray(getaddress) && getaddress.length > 0 ? (
               getaddress.map((item) => (
                 <div key={item?.id} className="w-full p-4 border border-gray-300 rounded flex items-center justify-between gap-2">
@@ -423,9 +513,28 @@ SetMyorder(true);
 
                   {/* Change Button */}
                   <div className='flex justify-end items-start gap-4 cursor-pointer'>
-                    <button className='bg-black text-white h-auto w-[100px] p-[10px] rounded-[4px] hover:bg-[gray] hover:text-black font-[400]' onClick={() => { setEdit(!edit); setEditData(item); }}>
-                      Change
-                    </button>
+                    
+                    <CiEdit size={25} onClick={() => { setEdit(!edit); setEditData(item); }} />
+
+                  <MdDeleteOutline size={25} onClick={() => {
+                                 handleDeltePopup();
+                               }}
+                               />
+                               <Dialog open={isPopup} onClose={() => setPopup(false)}>
+                                 <div className='bg-white w-[400px] h-auto  border-[1px] border-[#d8d1d1] shadow-md'>
+                                 <div className='flex items-start justify-end p-[4px] text-red-600'><MdOutlineCancel size={30}  onClick={() => { setPopup(false) }}/></div>
+                                   <div className='flex  flex-col items-center justify-center gap-4  p-[60px]'>
+                                    
+                                     <div>Are You Sure you want to delete it??</div>
+                                     <div className='flex gap-4'>
+                                       <button onClick={() => { setPopup(false) }} className='bg-gray-500 text-white p-2 border-2 w-[100px] rounded-[8px]'>Cancel</button>
+                                       <button onClick={() => { handleDeleteAddress(item?.id); setPopup(false) }} className='bg-red-700 text-white p-2 border-2  w-[100px] rounded-[8px]'>Delete</button>
+                                     </div>
+                 
+                                   </div>
+                 
+                                 </div>
+                               </Dialog>
                   </div>
                 </div>
               ))
@@ -514,6 +623,7 @@ SetMyorder(true);
                   className=' border-[1px] border-[#d8d1d1]  hover:border-black rounded-[2px] p-2' />
                 <span>Set as default address</span>
               </div>
+              <div className='flex items-center justify-start gap-10'>
               <button type="button"
                 onClick={() => {
 
@@ -523,12 +633,14 @@ SetMyorder(true);
                 className="bg-black h-[47px] w-[150px] text-white">
                 Update Address
               </button>
+              
               <button type="button"
-                className="flex items-start justify-start text-red-500"
+               className='text-[white] text-[18px] font-[400]  bg-[#964233]  h-[47px] w-[150px]'
                 onClick={() =>
                   setEdit(false)} >
                 Cancel
               </button>
+              </div>
             </form>
           )}
 

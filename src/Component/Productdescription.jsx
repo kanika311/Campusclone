@@ -98,6 +98,7 @@ SetSkeleton(false);
     
 
   const handleCart = async() => {
+ 
     try {
  
     
@@ -118,7 +119,7 @@ SetSkeleton(false);
           },
         ],
       };
-    const response=await dispatch(FetchCart(data));
+    const response=await dispatch(FetchCart(data,navigate));
     if(response){
       console.log(response,'response')
       setDrawerOpen(true);

@@ -19,6 +19,7 @@ const Address = ({ userdetail }) => {
   const { address } = useSelector((state) => state.addressauth)
   const handleDeltePopup = () => {
     setPopup(true);
+
   }
   const initialValues = {
 
@@ -79,9 +80,7 @@ const Address = ({ userdetail }) => {
 
   useEffect(() => {
     handleAddressList();
-
-  }, [dispatch, edit]);
-
+  }, []); 
   // update address api
 
   const editFormik = useFormik({
@@ -214,14 +213,15 @@ const Address = ({ userdetail }) => {
               className=' border-[1px] border-[#d8d1d1]  hover:border-black rounded-[2px] p-2 cursor-pointer' />
             <span>Set as default address</span>
           </div>
-
+<div className='flex items-center justify-start gap-10'>
           <button type='button' onClick={() => {
 
             formik.handleSubmit();
             setForm(false);
 
           }} className='bg-black h-[47px] w-[150px] text-white'>Add Address</button>
-          <div onClick={() => { setForm(false) }} className='text-[#964233] text-[15px] font-[400] mt-[4px]'>cancel</div>
+          <button onClick={() => { setForm(false) }} className='text-[white] text-[18px] font-[400]  bg-[#964233]  h-[47px] w-[150px]'>cancel</button>
+          </div>
         </form>
       )}
       {/*to render address  */}

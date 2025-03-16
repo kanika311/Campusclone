@@ -2,13 +2,22 @@ import axios from "axios"
 
 
 
+
 class Cart {
+  
 
 
-    async createCart(data){
+    async createCart(data,navigate){
+       
         try {
-
-        
+            const token = localStorage.getItem("token");
+            if (!token) {
+                navigate("/account");
+                alert("please Login first")
+               
+                return;
+            }
+    
             
             const response = await axios.post(`${process.env.REACT_APP_URL}/userapp/cart/create`,data,
                 {
